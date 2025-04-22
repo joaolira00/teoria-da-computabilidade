@@ -1,0 +1,86 @@
+====================================
+
+Iterativo:
+
+Considere a entrada 5:
+
+I1 = T: Testa n <= 0
+I2 = U: Testa n = 1
+I3 = V: Testa n = 2
+I4 = F:  for(i = 3; i <= n; i++)
+I5 = R: next = prev + curr; prev = curr; curr = next
+I6 = P:Imprime; Finaliza
+Ix = S: Parada
+
+(I1, T); (I2, TU); (I3, TUV); (I4, TUVF); (I5; TUVFR);
+(I4, TUVFRF); (I5, TUVFRFR); (I4, TUVFRFRF); (I5, TUVFRFRFR);
+(I4, TUVFRFRFRF), (I5, TUVFRFRFRFR), (I4, TUVFRFRFRFRF), (I5, TUVFRFRFRFRFR), (I4, TUVFRFRFRFRFRF), (I6, TUVFRFRFRFRFRFP), (IX, TUVFRFRFRFRFRFPS)
+
+Função computada do iterativo:
+(I1, (5, 0))
+(I2, (5, 0))
+(I3, (5, 0))
+(I4, (5, 0))
+(I5, (5, 3))
+(I4, (5, 3))
+(I5, (5, 5))
+(I4, (5, 5))
+(I6, (5, 5))
+(IX, (5, 5))
+
+
+========================================
+Recursivo:
+
+Considere a entrada 5:
+
+R1 = T: Testa n <= 0
+R2 = U: Testa n = 1
+R3 = V: Testa n = 2
+R4 = F: Chama recursiveFibonacci(count)
+R5 = R: nextNumber = a + b; Verifica n == count
+R6 = P: Verifica n; Imprime; retorna e finaliza
+Rx = S: Parada
+
+(R1, T); (R2, TU); (R3, TUV); (R4, TUVF); (R5; TUVFR);
+(R4, TUVFRF); (R5, TUVFRFR); (R4, TUVFRFRF); (R5, TUVFRFRFR);
+(R4, TUVFRFRFRF), (R5, TUVFRFRFRFR), (R4, TUVFRFRFRFRF), (R5, TUVFRFRFRFRFR), (R4, TUVFRFRFRFRFRF), (R6, TUVFRFRFRFRFRFP), (RX, TUVFRFRFRFRFRFPS)
+
+
+Função computada do recursivo 
+
+Recursiva def (se zero então PARE senao Recursiva; R, P)
+Recursiva, R, P
+se zero então PARE senao Recursiva; R, P, R, P
+se zero então PARE senao Recursiva; R, P, R, P, R, P
+se zero então PARE senao Recursiva; R, P, R, P, R, P, R, P
+se zero então PARE senao Recursiva; R, P, R, P, R, P, R, P, R, P
+
+
+============================================
+
+Monolítico:
+
+Considere a entrada 5:
+
+M1 = T: Lê input
+M2 = U: Verifica se n = 1
+M3 = V: Verifica se n > 1 vai para compute_fib
+M4 = F: chama fib_loop
+M5 = R: vai para fib_end
+M6 = P: print_result 
+Mx = S: Parada
+(M1, T); (M2, TU); (M3, TUV); (M4, TUVF); (M5; TUVFR);
+(M4, TUVFRF); (M5, TUVFRFR); (M4, TUVFRFRF); (M5, TUVFRFRFR);
+(M4, TUVFRFRFRF), (M5, TUVFRFRFRFR), (M4, TUVFRFRFRFRF), (M5, TUVFRFRFRFRFR), (M4, TUVFRFRFRFRFRF), (M6, TUVFRFRFRFRFRFP), (Mx, TUVFRFRFRFRFRFPS)
+
+(M1, (5, 0))
+(M2, (5, 0))
+(M3, (5, 0))
+(M4, (5, 0))
+(M5, (5, 3))
+(M4, (5, 3))
+(M5, (5, 5))
+(M4, (5, 5))
+(M6, (5, 5))
+(MX, (5, 5))
