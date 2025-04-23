@@ -1,86 +1,99 @@
-====================================
+Exemplo do Monolítico em C para a Máquina de Traços:
 
-Iterativo:
+#include <stdio.h>
 
-Considere a entrada 5:
+int main(void) {
+    int n, i;
+    long long prevNumber, currentNumber, nextNumber;
 
-I1 = T: Testa n <= 0
-I2 = U: Testa n = 1
-I3 = V: Testa n = 2
-I4 = F:  for(i = 3; i <= n; i++)
-I5 = R: next = prev + curr; prev = curr; curr = next
-I6 = P:Imprime; Finaliza
-Ix = S: Parada
+    printf("Digite o número de termos para a sequência de Fibonacci: ");
+    if (scanf("%d", &n) != 1)
+        return 0;
 
-(I1, T); (I2, TU); (I3, TUV); (I4, TUVF); (I5; TUVFR);
-(I4, TUVFRF); (I5, TUVFRFR); (I4, TUVFRFRF); (I5, TUVFRFRFR);
-(I4, TUVFRFRFRF), (I5, TUVFRFRFRFR), (I4, TUVFRFRFRFRF), (I5, TUVFRFRFRFRFR), (I4, TUVFRFRFRFRFRF), (I6, TUVFRFRFRFRFRFP), (IX, TUVFRFRFRFRFRFPS)
+    if (n == 0)            goto print_zero;
+    if (n == 1)            goto print_one;
 
-Função computada do iterativo:
-(I1, (5, 0))
-(I2, (5, 0))
-(I3, (5, 0))
-(I4, (5, 0))
-(I5, (5, 3))
-(I4, (5, 3))
-(I5, (5, 5))
-(I4, (5, 5))
-(I6, (5, 5))
-(IX, (5, 5))
+    prevNumber    = 0;
+    currentNumber = 1;
+    printf("%lld %lld ", prevNumber, currentNumber);
 
+    i = 2;
+    goto fib_loop;
 
-========================================
-Recursivo:
+print_zero:
+    printf("0 ");
+    goto end;
 
-Considere a entrada 5:
+print_one:
+    printf("0 1 ");
+    goto end;
 
-R1 = T: Testa n <= 0
-R2 = U: Testa n = 1
-R3 = V: Testa n = 2
-R4 = F: Chama recursiveFibonacci(count)
-R5 = R: nextNumber = a + b; Verifica n == count
-R6 = P: Verifica n; Imprime; retorna e finaliza
-Rx = S: Parada
+fib_loop:
+    if (i >= n)          goto end;
 
-(R1, T); (R2, TU); (R3, TUV); (R4, TUVF); (R5; TUVFR);
-(R4, TUVFRF); (R5, TUVFRFR); (R4, TUVFRFRF); (R5, TUVFRFRFR);
-(R4, TUVFRFRFRF), (R5, TUVFRFRFRFR), (R4, TUVFRFRFRFRF), (R5, TUVFRFRFRFRFR), (R4, TUVFRFRFRFRFRF), (R6, TUVFRFRFRFRFRFP), (RX, TUVFRFRFRFRFRFPS)
+    nextNumber = prevNumber + currentNumber;
+    printf("%lld ", nextNumber);
 
+    prevNumber    = currentNumber;
+    currentNumber = nextNumber;
+    i++;
+    goto fib_loop;
 
-Função computada do recursivo 
+end:
+    printf("\n");
+    return 0;
+}
 
-Recursiva def (se zero então PARE senao Recursiva; R, P)
-Recursiva, R, P
-se zero então PARE senao Recursiva; R, P, R, P
-se zero então PARE senao Recursiva; R, P, R, P, R, P
-se zero então PARE senao Recursiva; R, P, R, P, R, P, R, P
-se zero então PARE senao Recursiva; R, P, R, P, R, P, R, P, R, P
+R1: Faça Escrever("Digite...") vá_para R2;
+R2: Faça Ler(n) vá_para R3;
+R3: Se (n != 1) vá_para Rx senão vá_para R4;
+R4: Se (n == 0) vá_para R10 senão vá_para R5;
+R5: Se (n == 1) vá_para R11 senão vá_para R6;
+R6: Faça prevNumber = 0 vá_para R7;
+R7: Faça currentNumber = 1 vá_para R8;
+R8: Faça Escrever(prevNumber, currentNumber) vá_para R9;
+R9: Faça i = 2 vá_para R12;
+R10: Faça Escrever(0) vá_para Rx;
+R11: Faça Escrever(0 1) vá_para Rx;
+R12: Se (i >= n) vá_para rx senão vá_para R13;
+R13: Faça nextNumber = prevNumber + currentNumber;
+R14: Faça Escrever(nextNumber) vá_para R15;
+R15: Faça prevNumber = currentNumber vá_para R16;
+R16: Faça currentNumber = nextNumber vá_para R17;
+R17: Faça i = i + 1 vá_para R12;
 
+A = Escrever(Digite...)
+B = Ler(n)
+C = prevnumber = 0
+D = currentNumber = 1
+E = Escrever(orevNumber, CurrentNumber)
+F = i = 2
+G = Faça escrever(0)
+H = Faça escrever(0 1)
+I = Faça nextNumber = prevNumber + currentNumber
+J = Escrever(nextNumber)
+K = prevNumber = currentNumber
+L = currentNumber = nextNumber
+M = i = i + 1
 
-============================================
+R1: Faça A vá_para R2;
+R2: Faça B vá_para R3;
+R3: Se (n != 1) vá_para Rx senão vá_para R4;
+R4: Se (n == 0) vá_para R10 senão vá_para R5;
+R5: Se (n == 1) vá_para R11 senão vá_para R6;
+R6: Faça C vá_para R7;
+R7: Faça D vá_para R8;
+R8: Faça E vá_para R9;
+R9: Faça F vá_para R12;
+R10: Faça G vá_para Rx;
+R11: Faça H vá_para Rx;
+R12: Se (i >= n) vá_para rx senão vá_para R13;
+R13: Faça I vá_para R14;
+R14: Faça J vá_para R15;
+R15: Faça K vá_para R16;
+R16: Faça L vá_para R17;
+R17: Faça M vá_para R12;
 
-Monolítico:
+n = 3
 
-Considere a entrada 5:
-
-M1 = T: Lê input
-M2 = U: Verifica se n = 1
-M3 = V: Verifica se n > 1 vai para compute_fib
-M4 = F: chama fib_loop
-M5 = R: vai para fib_end
-M6 = P: print_result 
-Mx = S: Parada
-(M1, T); (M2, TU); (M3, TUV); (M4, TUVF); (M5; TUVFR);
-(M4, TUVFRF); (M5, TUVFRFR); (M4, TUVFRFRF); (M5, TUVFRFRFR);
-(M4, TUVFRFRFRF), (M5, TUVFRFRFRFR), (M4, TUVFRFRFRFRF), (M5, TUVFRFRFRFRFR), (M4, TUVFRFRFRFRFRF), (M6, TUVFRFRFRFRFRFP), (Mx, TUVFRFRFRFRFRFPS)
-
-(M1, (5, 0))
-(M2, (5, 0))
-(M3, (5, 0))
-(M4, (5, 0))
-(M5, (5, 3))
-(M4, (5, 3))
-(M5, (5, 5))
-(M4, (5, 5))
-(M6, (5, 5))
-(MX, (5, 5))
+(1,e)(2,A)(3,AB)(4,AB)(5,AB)(6,AB)(7,ABC)(8,ABCD)(9,ABCDE)(12,ABCDEF)(13,ABCDEF)(14,ABCDEFI)(15,ABCDEFIJ)(16,ABCDEFIJK)(17,ABCDEFIJKL)(12,ABCDEFIJKLM)(Rx,ABCDEFIJKLM)
