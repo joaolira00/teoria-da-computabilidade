@@ -1,123 +1,106 @@
 section .data
-    prompt      db "Insira um numero: ", 0
-    prompt_len  equ $ - prompt
-
-    invalid_msg db "Numero invalido! Tente novamente.", 10, 0
-    invalid_len equ $ - invalid_msg
-
-    input_buf   times 3 db 0
-    result      db '0','0'
-
+prompt      db "Insira um numero: ", 0
+prompt_len  equ $ - prompt
+invalid_msg db "Numero invalido! Tente novamente.", 10, 0
+invalid_len equ $ - invalid_msg
+num_buf     db '0','0',' ', 0
+newline     db 10, 0
+section .bss
+input_buf   resb 3
 section .text
-    global _start
-
+global _start
 _start:
 read_input:
-    mov eax, 4
-    mov ebx, 1
-    mov ecx, prompt
-    mov edx, prompt_len
-    int 0x80
+    mov     rax, 1
+    mov     rdi, 1
+    mov     rsi, prompt
+    mov     rdx, prompt_len
+    syscall
+    mov     rax, 0
+    mov     rdi, 0
+    mov     rsi, input_buf
+    mov     rdx, 3
+    syscall
+    mov     al, [input_buf]
+    cmp     al, '0'
+    jl      invalid
+    cmp     al, '9'
+    jg      invalid
+    sub     al, '0'
+    movzx   rax, al
+    mov     dl, [input_buf+1]
+    cmp     dl, 10
+    je      got_num
+    mov     rcx, 10
+    imul    rax, rcx
+    movzx   rcx, dl
+    cmp     cl, '0'
+    jl      invalid
+    cmp     cl, '9'
+    jg      invalid
+    sub     cl, '0'
+    add     rax, rcx
 
-    mov eax, 3
-    mov ebx, 0
-    mov ecx, input_buf
-    mov edx, 3
-    int 0x80
-
-    movzx eax, byte [input_buf]
-    cmp al, '0'
-    jl invalid
-    cmp al, '9'
-    jg invalid
-    sub al, '0'
-    movzx eax, eax
-
-    mov dl, [input_buf+1]
-    cmp dl, 10
-    je got_number_one
-
-    mov ecx, 10
-    mul ecx
-    movzx ecx, byte [input_buf+1]
-    cmp cl, '0'
-    jl invalid
-    cmp cl, '9'
-    jg invalid
-    sub cl, '0'
-    add eax, ecx
-    jmp got_number
-
-got_number_one:
-    movzx eax, byte [input_buf]
-    sub al, '0'
-
-got_number:
-    cmp eax, 11
-    jg invalid
-
-    mov ecx, eax
-    jmp compute_fib
+got_num:
+    cmp     rax, 11
+    ja      invalid
+    mov     rcx, rax
+    jmp     compute_seq
 
 invalid:
-    mov eax, 4
-    mov ebx, 1
-    mov ecx, invalid_msg
-    mov edx, invalid_len
-    int 0x80
-    jmp read_input
+    mov     rax, 1
+    mov     rdi, 1
+    mov     rsi, invalid_msg
+    mov     rdx, invalid_len
+    syscall
+    jmp     read_input
 
-compute_fib:
-    cmp ecx, 0
-    je fib_zero
-    cmp ecx, 1
-    je fib_one
+print_num:
+    push    rax
+    push    rbx
+    push    rcx
+    push    rdx
+    mov     rbx, rax
+    xor     rdx, rdx
+    mov     rcx, 10
+    div     rcx
+    add     al, '0'
+    add     dl, '0'
+    mov     [num_buf], al
+    mov     [num_buf+1], dl
+    mov     byte [num_buf+2], ' '
+    mov     rax, 1
+    mov     rdi, 1
+    lea     rsi, [num_buf]
+    mov     rdx, 3
+    syscall
+    pop     rdx
+    pop     rcx
+    pop     rbx
+    pop     rax
+    ret
 
-    mov eax, 0
-    mov ebx, 1
-    mov edx, 2
+compute_seq:
+    xor     rdx, rdx
+    xor     rax, rax
+    mov     rbx, 1
 
-fib_loop:
-    cmp edx, ecx
-    jg fib_end
+seq_loop:
+    cmp     rdx, rcx
+    jg      seq_done
+    call    print_num
+    mov     rsi, rax
+    mov     rax, rbx
+    add     rbx, rsi
+    inc     rdx
+    jmp     seq_loop
 
-    mov esi, eax
-    add esi, ebx
-    mov eax, ebx
-    mov ebx, esi
-    inc edx
-    jmp fib_loop
-
-fib_zero:
-    mov ebx, 0
-    jmp print_result
-
-fib_one:
-    mov ebx, 1
-    jmp print_result
-
-fib_end:
-    jmp print_result
-
-
-print_result:
-    mov eax, ebx
-    xor edx, edx
-    mov ecx, 10
-    div ecx
-
-    add al, '0'
-    add dl, '0'
-    mov [result],  al
-    mov [result+1], dl
-
-    mov eax, 4
-    mov ebx, 1
-    mov ecx, result
-    mov edx, 2
-    int 0x80
-
-
-    mov eax, 1
-    xor ebx, ebx
-    int 0x80
+seq_done:
+    mov     rax, 1
+    mov     rdi, 1
+    mov     rsi, newline
+    mov     rdx, 1
+    syscall
+    mov     rax, 60
+    xor     rdi, rdi
+    syscall
